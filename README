@@ -1,7 +1,11 @@
-this project is used to crawl bbs.byr.cn data.
+This project is used to crawl bbs.byr.cn data.
+此项目用于爬取北邮人论坛相关数据。
 
 only 3 steps needed:
-1: create mysql db
+只需以下三步：
+
+1: create mysql db and tables
+1.创建mysql数据库与表格
 
 CREATE TABLE `section` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -34,9 +38,11 @@ CREATE TABLE `articlebody` (
 
 
 2: crawl bbs section information
+爬取板块信息（存储于section表格）
 cmd: scrapy crawl byr_section
 
 3: crawl bbs content
+爬取帖子信息（存储于articleinfo，articlebody表格）
 cmd: scrapy crawl byr_article
 
 
