@@ -22,7 +22,7 @@ NEWSPIDER_MODULE = 'byrbbs.spiders'
 ROBOTSTXT_OBEY = True
 
 # LOG_ENABLED = False
-LOG_lEVEL = "INFO"
+LOG_LEVEL = "INFO"
 #LOG_FILE = "log_file.txt"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)

@@ -43,9 +43,7 @@ class ByrSectionSpider(scrapy.Spider):
         top_section_num = response.meta['item']['top_section_num']
         top_section_name = response.meta['item']['top_section_name']
         body = response.body_as_unicode()
-        data = body.replace(r'\"', '"')
-        # {"t": "<a href=\"/board/BTadvice\" title=\"北邮人BT意见与建议\">北邮人BT意见与建议</a>"},
-        # {"t": "<a href=\"/board/BTannounce\" title=\"BT公告区\">BT公告区</a>"},
+        data = body.replace(r'\"', '"') #原始形式为“/board/BTadvice\”，需删除尾部的\
         results = re.findall(self.pat, data, re.I)   #re,I 忽略大小写
         for result in results:
             url = result[0]
@@ -60,7 +58,7 @@ class ByrSectionSpider(scrapy.Spider):
                 item['section_name'] = title
                 item['top_section_num'] = top_section_num
                 item['top_section_name'] = top_section_name
-                # yield item    #传出/存储于本地文件
+                # yield item    #传出/存储于本地文件，用于测试
                 yield scrapy.Request(response.urljoin(url), meta={'cookiejar': response.meta['cookiejar'], 'item': item}, headers=HEADERS,callback=self.parse_article_total)
 
     def parse_article_total(self,response):

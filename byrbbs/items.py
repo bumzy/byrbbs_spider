@@ -23,17 +23,3 @@ class ByrSectionItem(scrapy.Item):
     section_article_total = scrapy.Field()
     top_section_num = scrapy.Field()
     top_section_name = scrapy.Field()
-
-# class ByrArticleInfoItem(scrapy.Item):
-#     # define the fields for your item here like:
-#     section_name = scrapy.Field()
-#     article_title = scrapy.Field()
-#     article_url = scrapy.Field()
-#     article_createtime = scrapy.Field()
-#     article_author = scrapy.Field()
-#     article_comment = scrapy.Field()
-#
-# class ByrArticleBodyItem(scrapy.Item):
-#     # define the fields for your item here like:
-#     article_url = scrapy.Field()
-#     article_content = scrapy.Field()

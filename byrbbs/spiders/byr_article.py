@@ -55,13 +55,11 @@ class ByrArticleSpider(scrapy.Spider):
         # print "parse_article_list "+response._get_url()
         section_name = response.meta['item']['section_name']
         sel_article = response.xpath('//*[@class="b-content"]/table/tbody/tr')
-        # sel_article = response.css('div.b-content tbody tr')
         article_url = sel_article.xpath('td[2]/a/@href').extract()
         article_title = sel_article.xpath('td[2]/a/text()').extract()
         article_createtime = sel_article.xpath('td[3]/text()').extract()
         article_author = sel_article.xpath('td[4]/a/text()').extract()
         article_comment = sel_article.xpath('td[5]/text()').extract()
-        # article_comment = sel_article.xpath('td[@class="title_11"]/text').extract()
 
         # 处理列表的每一行，即每一篇文章的信息，存入item
         for index, url in enumerate(article_url):
@@ -72,24 +70,17 @@ class ByrArticleSpider(scrapy.Spider):
             item['article_createtime'] = article_createtime[index]
             item['article_author'] = article_author[index]
             item['article_comment'] = article_comment[index]
-            # print item
-            # yield item
             yield scrapy.Request(item['article_url'], meta={'cookiejar': response.meta['cookiejar'],'item': item}, headers=HEADERS,callback=self.parse_article_content)
 
     # 处理文章主体内容
     def parse_article_content(self, response):
-                    # print response._get_url()
-                    # print response.body_as_unicode()
+        # print response._get_url()
+        # print response.body_as_unicode()
         article = response.xpath('//div[3]/div[1]/table/tr[2]/td[2]/div[1]').extract()[0]
-                    # article = re.split('--',article)[:-1]
-                    # if(len(article)>1):
-                    #     article = '--'.join(article)
-                    # article = article[0]
         article = re.sub('</?(font|div).*?>', '', article)
         article = re.sub('<br>', '\n', article)
         item = response.meta['item']
         item['article_content'] = article
-        # item['article_content'] = ''
         yield item
 
 
