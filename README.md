@@ -1,4 +1,4 @@
-This project is used to crawl bbs.byr.cn data.To see detail information,please see [this thread][1]
+This project is used to crawl bbs.byr.cn data.Details see [this post][1].
 
 此项目用于爬取北邮人论坛相关数据。详细说明见[此帖][1]
 
@@ -52,6 +52,7 @@ scrapy crawl byr_section
 ```
 
 3.crawl bbs content(stored in table articleinfo，articlebody)
+
 爬取帖子信息（存储于articleinfo，articlebody表格）
 
 ```shell
