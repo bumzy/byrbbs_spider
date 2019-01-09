@@ -5,7 +5,6 @@ from scrapy.conf import settings
 from byrbbs.items import ByrArticleItem
 import pymongo
 import re
-import MySQLdb
 
 class ByrArticleSpider(scrapy.Spider):
     pipeline = ['ByrArticlePipeline']
@@ -83,13 +82,13 @@ class ByrArticleSpider(scrapy.Spider):
 
     # 处理文章主体内容
     def parse_article_content(self, response):
-        from scrapy.shell import inspect_response
-        import sys
-        inspect_response(response, self)
-        sys.exit()
+        # from scrapy.shell import inspect_response
+        # import sys
+        # inspect_response(response, self)
+        # sys.exit()
         # print response._get_url()
         # print response.body
-        article = response.xpath('//div[3]/div[1]/table/tbody/tr[2]/td[2]/div[1]').extract()[0]
+        article = response.xpath('/html/body/div[3]/div/table/tr[2]/td[2]/div').extract()[0]
         article = re.sub('</?(font|div).*?>', '', article)
         article = re.sub('<br>', '\n', article)
         item = response.meta['item']
