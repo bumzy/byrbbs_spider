@@ -70,7 +70,7 @@ LOG_LEVEL = "INFO"
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'byrbbs.pipelines.ByrSectionPipeline': 300,
-    'byrbbs.pipelines.ByrArticlePipeline': 400,
+    # 'byrbbs.pipelines.ByrArticlePipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -93,3 +93,10 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+MONGO_HOST = "127.0.0.1"
+MONGO_PORT = 27017
+MONGO_DB = "byrbbs" 
+MONGO_COLL_SECTION = "section"
+MONGO_COLL_ARTICLE = "article"
+MONGO_COLL_COMMENT = "comment"

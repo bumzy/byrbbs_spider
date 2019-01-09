@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from byrbbs.spiders.byr_config import URL_HEAD,HEADERS,LOGIN_FORMDATA
+from scrapy.conf import settings
 from byrbbs.items import ByrArticleItem
+import pymongo
 import re
 import MySQLdb
 
@@ -20,16 +22,23 @@ class ByrArticleSpider(scrapy.Spider):
                                    callback=self.logged_in)]
 
     def logged_in(self, response):
-        DB_CONFIG = {'host': '118.89.225.208', 'user': 'root', 'passwd': 'chen12//', 'db': 'byrbbs', 'port': 3306,
-                     'charset': 'utf8'}
-        conn = MySQLdb.connect(**DB_CONFIG)
-        cursor = conn.cursor()
-        sql = 'select * from section'
-        cursor.execute(sql)
-        for row in cursor.fetchall():
+        self.client = pymongo.MongoClient(host=settings['MONGO_HOST'], port=settings['MONGO_PORT'])
+        # 数据库登录需要帐号密码的话
+        # self.client.admin.authenticate(settings['MINGO_USER'], settings['MONGO_PSW'])
+        self.db = self.client[settings['MONGO_DB']]  # 获得数据库的句柄
+        self.coll = self.db[settings['MONGO_COLL_SECTION']]  # 获得collection的句柄
+
+        # DB_CONFIG = {'host': '118.89.225.208', 'user': 'root', 'passwd': 'chen12//', 'db': 'byrbbs', 'port': 3306,
+        #              'charset': 'utf8'}
+        # conn = MySQLdb.connect(**DB_CONFIG)
+        # cursor = conn.cursor()
+        # sql = 'select * from section'
+        # cursor.execute(sql)
+        # for row in cursor.fetchall():
+        for section in self.coll.find():
             item = ByrArticleItem()
-            item['section_name'] = row[1]
-            yield scrapy.Request(response.urljoin(row[1]),meta={'cookiejar':response.meta['cookiejar'],'item':item},headers=HEADERS, callback=self.parse_article_list_pre)
+            item['section_name'] = section['section_name']
+            yield scrapy.Request(response.urljoin(section['section_url']),meta={'cookiejar':response.meta['cookiejar'],'item':item},headers=HEADERS, callback=self.parse_article_list_pre)
 
         # 用于测试指定板块或文章
         # self.start_urls = ['https://bbs.byr.cn/article/BM_Market/693']
@@ -74,9 +83,13 @@ class ByrArticleSpider(scrapy.Spider):
 
     # 处理文章主体内容
     def parse_article_content(self, response):
+        from scrapy.shell import inspect_response
+        import sys
+        inspect_response(response, self)
+        sys.exit()
         # print response._get_url()
-        # print response.body_as_unicode()
-        article = response.xpath('//div[3]/div[1]/table/tr[2]/td[2]/div[1]').extract()[0]
+        # print response.body
+        article = response.xpath('//div[3]/div[1]/table/tbody/tr[2]/td[2]/div[1]').extract()[0]
         article = re.sub('</?(font|div).*?>', '', article)
         article = re.sub('<br>', '\n', article)
         item = response.meta['item']

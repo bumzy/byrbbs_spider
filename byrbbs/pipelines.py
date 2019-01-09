@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from byrbbs.spiders.byr_config import DB_CONFIG
-import MySQLdb
+import pymongo
 import functools
+from scrapy.conf import settings
 # Define your item pipelines here
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
@@ -17,34 +17,26 @@ def check_pipline(func):
     return wrapper
 
 class ByrSectionPipeline(object):
+    def __init__(self):
+        self.client = pymongo.MongoClient(host=settings['MONGO_HOST'], port=settings['MONGO_PORT'])
+        # 数据库登录需要帐号密码的话
+        # self.client.admin.authenticate(settings['MINGO_USER'], settings['MONGO_PSW'])
+        self.db = self.client[settings['MONGO_DB']]  # 获得数据库的句柄
+        self.coll = self.db[settings['MONGO_COLL_SECTION']]  # 获得collection的句柄
     @check_pipline
     def process_item(self, item, spider):
-        # 用spider.name区分不同的spier
-        # https://segmentfault.com/q/1010000004863755
-        con = MySQLdb.connect(**DB_CONFIG)
-        cur = con.cursor()
-        sql = 'insert into section(section_url,section_name,section_article_total,top_section_num,top_section_name) values(%s,%s,%s,%s,%s)'
-        values = (item['section_url'], item['section_name'],item['section_article_total'],item['top_section_num'],item['top_section_name'])
-        cur.execute(sql, values)  # second parameter must be iterabale
-        con.commit()
-        cur.close()
-        con.close()
+        self.coll.insert(dict(item))
         return item
 
 class ByrArticlePipeline(object):
+    def __init__(self):
+        self.client = pymongo.MongoClient(host=settings['MONGO_HOST'], port=settings['MONGO_PORT'])
+        # 数据库登录需要帐号密码的话
+        # self.client.admin.authenticate(settings['MINGO_USER'], settings['MONGO_PSW'])
+        self.db = self.client[settings['MONGO_DB']]  # 获得数据库的句柄
+        self.coll = self.db[settings['MONGO_COLL_ARTICLE']]  # 获得collection的句柄
     @check_pipline
     def process_item(self, item, spider):
-        con = MySQLdb.connect(**DB_CONFIG)
-        cur = con.cursor()
-        sql = 'insert into articleinfo(section_name,article_title,article_url,article_comment,article_author,article_createtime) ' \
-              'values(%s,%s,%s,%s,%s,%s)'
-        values = (item['section_name'], item['article_title'], item['article_url'], item['article_comment'], item['article_author'], item['article_createtime'])
-        cur.execute(sql, values)  # second parameter must be iterabale
-        sql2 = 'insert into articlebody(article_url,article_content) values(%s,%s)'
-        values2 = (item['article_url'],item['article_content'])
-        cur.execute(sql2,values2)
-        con.commit()
-        cur.close()
-        con.close()
+        self.coll.insert(dict(item))
         return item
 
