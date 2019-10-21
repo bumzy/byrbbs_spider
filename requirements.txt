@@ -99,7 +99,7 @@ urlgrabber==3.10
 urllib3==1.23
 virtualenv==16.2.0
 w3lib==1.17.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 wrapt==1.10.11
 yum-langpacks==0.4.2
 yum-metadata-parser==1.1.4
