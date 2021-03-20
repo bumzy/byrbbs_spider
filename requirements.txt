@@ -36,7 +36,7 @@ IPy==0.75
 iso8601==0.1.12
 isort==4.3.4
 javapackages==1.0.0
-Jinja2==2.10
+Jinja2==2.11.3
 kitchen==1.1.1
 langtable==0.0.31
 lazy-object-proxy==1.3.1
