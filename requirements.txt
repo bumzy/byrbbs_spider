@@ -75,7 +75,7 @@ python-linux-procfs==0.4.9
 pytz==2018.5
 pyudev==0.15
 pyxattr==0.5.1
-PyYAML==3.13
+PyYAML==5.4
 qiniu==7.1.4
 queuelib==1.4.2
 requests==2.19.1
