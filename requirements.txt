@@ -80,7 +80,7 @@ qiniu==7.1.4
 queuelib==1.4.2
 requests==2.19.1
 schedutils==0.4
-Scrapy==1.5.1
+Scrapy==1.8.2
 seobject==0.1
 sepolicy==1.1
 service-identity==17.0.0
